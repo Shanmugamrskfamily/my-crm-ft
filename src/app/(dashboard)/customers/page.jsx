@@ -28,6 +28,7 @@ const { Title, Text } = Typography;
 export default function CustomersPage() {
   const dispatch = useDispatch();
   const { message } = App.useApp();
+  const user = useSelector((state) => state.auth.user);
 
   const customers = useSelector((state) => state.customers.items || []);
   const selectedRowKeys = useSelector(
@@ -190,7 +191,7 @@ const columns = [
           cancelText="No"
           okButtonProps={{ danger: true }}
         >
-          <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+          <Button disabled={user?.role !== "Admin"} type="text" size="small" danger icon={<DeleteOutlined />} />
         </Popconfirm>
       </Space>
     ),
@@ -252,7 +253,7 @@ const columns = [
                 okText="Delete Selected"
                 okButtonProps={{ danger: true }}
               >
-                <Button danger type="primary" icon={<DeleteOutlined />}>
+                <Button disabled={user?.role !== "Admin"} danger type="primary" icon={<DeleteOutlined />}>
                   Bulk Delete ({selectedRowKeys.length})
                 </Button>
               </Popconfirm>

@@ -46,6 +46,7 @@ export default function TasksPage() {
   const tasks = useSelector((state) => state.tasks.items || []);
   const customers = useSelector((state) => state.customers.items || []);
   const leads = useSelector((state) => state.leads.items || []);
+  const user = useSelector((state) => state.auth.user);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -202,7 +203,7 @@ export default function TasksPage() {
             cancelText="No"
             okButtonProps={{ danger: true }}
           >
-            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+            <Button disabled={user?.role !== "Admin"} type="text" size="small" danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),

@@ -45,6 +45,7 @@ export default function LeadsPage() {
   const { message, modal } = App.useApp();
 
   const leads = useSelector((state) => state.leads.items || []);
+  const user = useSelector((state) => state.auth.user);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -210,7 +211,7 @@ export default function LeadsPage() {
             cancelText="No"
             okButtonProps={{ danger: true }}
           >
-            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+            <Button disabled={user?.role !== "Admin"} type="text" size="small" danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),
