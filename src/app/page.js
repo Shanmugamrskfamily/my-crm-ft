@@ -1,21 +1,28 @@
 // src/app/page.jsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 
 export default function RootPage() {
   const router = useRouter();
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.replace("/dashboard");
-    } else {
-      router.replace("/login");
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      if (isAuthenticated) {
+        router.replace("/dashboard");
+      } else {
+        router.replace("/login");
+      }
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, isMounted]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">

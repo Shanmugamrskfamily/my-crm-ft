@@ -79,7 +79,9 @@ export default function DashboardLayout({ children }) {
       label: (
         <div>
           <Text strong>{user?.name || "CRM User"}</Text>
-          <div className="text-xs text-slate-400">{user?.email || "user@crm.io"}</div>
+          <div className="text-xs text-slate-400">
+            {user?.email || "user@crm.io"}
+          </div>
         </div>
       ),
       disabled: true,
