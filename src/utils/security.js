@@ -1,55 +1,27 @@
 // src/utils/security.js
-import DOMPurify from "isomorphic-dompurify";
 import CryptoJS from "crypto-js";
+import DOMPurify from "dompurify";
 
 const SECRET_KEY =
-  process.env.NEXT_PUBLIC_AES_SECRET_KEY || "crm_aes_256_super_secret_key_2026";
+  process.env.NEXT_PUBLIC_AES_SECRET_KEY || "default_super_secret_crm_key_2026";
 
-/**
- * Recursively sanitize strings, arrays, or objects against XSS
- */
-export const sanitizeInput = (input) => {
-  if (typeof input === "string") {
-    return DOMPurify.sanitize(input.trim());
-  }
-
-  if (Array.isArray(input)) {
-    return input.map((item) => sanitizeInput(item));
-  }
-
-  if (input !== null && typeof input === "object") {
-    const sanitizedObj = {};
-    for (const [key, value] of Object.entries(input)) {
-      sanitizedObj[key] = sanitizeInput(value);
-    }
-    return sanitizedObj;
-  }
-
-  return input;
-};
-
-/**
- * AES-256 Encrypt payload to ciphertext string
- */
+// 1. AES-256 Encryption
 export const encryptData = (data) => {
   try {
-    const stringData = typeof data === "string" ? data : JSON.stringify(data);
-    return CryptoJS.AES.encrypt(stringData, SECRET_KEY).toString();
+    const jsonString = typeof data === "object" ? JSON.stringify(data) : String(data);
+    return CryptoJS.AES.encrypt(jsonString, SECRET_KEY).toString();
   } catch (error) {
     console.error("Encryption error:", error);
-    return "";
+    return null;
   }
 };
 
-/**
- * AES-256 Decrypt ciphertext back to object or string
- */
-export const decryptData = (ciphertext) => {
+// 2. AES-256 Decryption
+export const decryptData = (cipherText) => {
   try {
-    if (!ciphertext) return null;
-    const bytes = CryptoJS.AES.decrypt(ciphertext, SECRET_KEY);
+    if (!cipherText) return null;
+    const bytes = CryptoJS.AES.decrypt(cipherText, SECRET_KEY);
     const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
-
     if (!decryptedString) return null;
 
     try {
@@ -63,29 +35,48 @@ export const decryptData = (ciphertext) => {
   }
 };
 
-/**
- * Simulated AES-256 encrypted API request/response exchange
- */
-export const mockSecureApiCall = async (endpoint, payload) => {
-  const sanitized = payload ? sanitizeInput(payload) : undefined;
-  const encryptedPayload = sanitized ? encryptData(sanitized) : undefined;
+// 3. XSS Sanitization with DOMPurify (Strips all HTML tags and scripts)
+export const sanitizeInput = (input) => {
+  if (!input) return input;
 
-  // Artificial latency
-  await new Promise((resolve) => setTimeout(resolve, 200));
+  const purifyInstance =
+    typeof window !== "undefined" && DOMPurify.sanitize
+      ? DOMPurify
+      : { sanitize: (str) => String(str).replace(/<[^>]*>?/gm, "") };
 
-  const serverReceivedPayload = encryptedPayload
-    ? decryptData(encryptedPayload)
-    : undefined;
+  if (typeof input === "string") {
+    return purifyInstance.sanitize(input.trim(), { ALLOWED_TAGS: [] });
+  }
 
-  const mockResponse = {
-    status: 200,
-    endpoint,
-    data: serverReceivedPayload,
-    timestamp: new Date().toISOString(),
-  };
+  if (Array.isArray(input)) {
+    return input.map((item) => sanitizeInput(item));
+  }
 
-  const encryptedResponse = encryptData(mockResponse);
-  const decryptedResponse = decryptData(encryptedResponse);
+  if (typeof input === "object" && input !== null) {
+    const sanitizedObj = {};
+    for (const [key, value] of Object.entries(input)) {
+      sanitizedObj[key] = sanitizeInput(value);
+    }
+    return sanitizedObj;
+  }
 
-  return decryptedResponse ? decryptedResponse.data : null;
+  return input;
 };
+
+// 4. Mock Secure API Dispatcher
+export const mockSecureApiCall = async (endpoint, rawPayload) => {
+  const sanitized = sanitizeInput(rawPayload);
+  const encryptedPayload = encryptData(sanitized);
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        status: 200,
+        endpoint,
+        data: decryptedPayload(encryptedPayload),
+      });
+    }, 150);
+  });
+};
+
+const decryptedPayload = (enc) => decryptData(enc);

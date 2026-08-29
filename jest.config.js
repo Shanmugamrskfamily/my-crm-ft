@@ -1,12 +1,19 @@
 // jest.config.js
-module.exports = {
-  testEnvironment: "jsdom",
+const nextJest = require("next/jest");
+
+const createJestConfig = nextJest({
+  dir: "./",
+});
+
+const customJestConfig = {
+  testEnvironment: "jest-environment-jsdom",
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
-    "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
-  transform: {
-    "^.+\\.(js|jsx|ts|tsx)$": ["@swc/jest"],
-  },
+  transformIgnorePatterns: [
+    "/node_modules/(?!(@exodus/bytes|isomorphic-dompurify|dompurify|html-encoding-sniffer)/)",
+  ],
 };
+
+module.exports = createJestConfig(customJestConfig);
