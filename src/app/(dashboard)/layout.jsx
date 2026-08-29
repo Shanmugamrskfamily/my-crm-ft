@@ -100,7 +100,7 @@ export default function DashboardLayout({ children }) {
 
   return (
     <AuthGuard>
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout style={{ minHeight: "100vh"}}>
         <Sider
           trigger={null}
           collapsible
@@ -146,14 +146,13 @@ export default function DashboardLayout({ children }) {
               style={{ fontSize: "16px", width: 44, height: 44 }}
             />
 
-            <Space size="middle">
+            <Space size="middle" style={{marginTop: "10px"}}>
               <Switch
                 checkedChildren={<BulbFilled />}
                 unCheckedChildren={<BulbOutlined />}
                 checked={currentTheme === "dark"}
                 onChange={() => dispatch(toggleTheme())}
               />
-
               <Dropdown menu={{ items: userDropdownItems }} placement="bottomRight">
                 <Space className="cursor-pointer">
                   <Avatar
