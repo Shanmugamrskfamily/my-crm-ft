@@ -61,7 +61,7 @@ export default function CustomerModal({ isOpen, onClose, customerToEdit = null }
       okText={isEditing ? "Save Changes" : "Create Customer"}
       cancelText="Cancel"
       centered
-      destroyOnClose
+      destroyOnHidden
     >
       <Form form={form} layout="vertical" className="mt-4">
         <Form.Item

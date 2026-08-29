@@ -234,7 +234,7 @@ export default function TasksPage() {
       {/* Metric Highlights */}
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={8}>
-          <Card bordered={false} className="shadow-xs rounded-xl">
+          <Card variant="borderless" className="shadow-xs rounded-xl">
             <Statistic
               title="To Do"
               value={todoCount}
@@ -243,7 +243,7 @@ export default function TasksPage() {
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card bordered={false} className="shadow-xs rounded-xl">
+          <Card variant="borderless" className="shadow-xs rounded-xl">
             <Statistic
               title="In Progress"
               value={inProgressCount}
@@ -252,7 +252,7 @@ export default function TasksPage() {
           </Card>
         </Col>
         <Col xs={24} sm={8}>
-          <Card bordered={false} className="shadow-xs rounded-xl">
+          <Card variant="borderless" className="shadow-xs rounded-xl">
             <Statistic
               title="Completed"
               value={completedCount}

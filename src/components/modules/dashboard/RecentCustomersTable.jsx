@@ -49,12 +49,12 @@ export default function RecentCustomersTable({ customers }) {
       }
       extra={
         <Link href="/customers">
-          <Button type="link" size="small" icon={<ArrowRightOutlined />} iconPosition="end">
+          <Button type="link" size="small" icon={<ArrowRightOutlined />} iconPlacement="end">
             View All
           </Button>
         </Link>
       }
-      bordered={false}
+      variant="borderless"
       className="shadow-xs rounded-xl h-full"
     >
       <Table

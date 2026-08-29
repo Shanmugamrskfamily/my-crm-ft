@@ -203,7 +203,7 @@ export default function CustomerDetailPage() {
         </Button>
       </div>
 
-      <Card bordered={false} className="shadow-xs rounded-xl">
+      <Card variant="borderless" className="shadow-xs rounded-xl">
         <Descriptions
           title={
             <div className="flex items-center gap-2">

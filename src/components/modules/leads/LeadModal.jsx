@@ -61,7 +61,7 @@ export default function LeadModal({ isOpen, onClose, leadToEdit = null }) {
       okText={isEditing ? "Save Changes" : "Create Lead"}
       cancelText="Cancel"
       centered
-      destroyOnClose
+      destroyOnHidden
     >
       <Form form={form} layout="vertical" className="mt-4">
         <Form.Item

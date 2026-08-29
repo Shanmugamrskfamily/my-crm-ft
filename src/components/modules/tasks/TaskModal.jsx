@@ -76,7 +76,7 @@ export default function TaskModal({ isOpen, onClose, taskToEdit = null }) {
       okText={isEditing ? "Save Changes" : "Create Task"}
       cancelText="Cancel"
       centered
-      destroyOnClose
+      destroyOnHidden
     >
       <Form form={form} layout="vertical" className="mt-4">
         <Form.Item

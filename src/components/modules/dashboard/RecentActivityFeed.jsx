@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const { Text } = Typography;
 
-export default function RecentActivityFeed({ activities }) {
+export default function RecentActivityFeed({ activities = [] }) {
   const getDotColor = (type) => {
     switch (type) {
       case "Created":
@@ -23,7 +23,7 @@ export default function RecentActivityFeed({ activities }) {
 
   const timelineItems = activities.map((act) => ({
     color: getDotColor(act.type),
-    children: (
+    content: (
       <div className="text-xs">
         <div className="font-semibold text-slate-800 dark:text-slate-200">
           {act.description}
@@ -49,11 +49,14 @@ export default function RecentActivityFeed({ activities }) {
           <span className="text-sm font-semibold">Recent Activities</span>
         </div>
       }
-      bordered={false}
+      variant="borderless"
       className="shadow-xs rounded-xl h-full"
     >
       {activities.length === 0 ? (
-        <Empty description="No recent activity logged" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty
+          description="No recent activity logged"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
       ) : (
         <Timeline items={timelineItems} className="mt-2" />
       )}

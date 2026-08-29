@@ -113,99 +113,89 @@ export default function CustomersPage() {
     setIsModalOpen(true);
   };
 
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      render: (text, record) => (
-        <Link
-          href={`/customers/${record.id}`}
-          className="font-medium text-indigo-600 hover:underline"
-        >
-          {text}
+const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+    sorter: (a, b) => a.name.localeCompare(b.name),
+    render: (text, record) => (
+      <Link
+        href={`/customers/${record.id}`}
+        className="font-bold hover:underline text-sm"
+      >
+        {text}
+      </Link>
+    ),
+  },
+  {
+    title: "Company",
+    dataIndex: "company",
+    key: "company",
+    sorter: (a, b) => a.company.localeCompare(b.company),
+    render: (text) => <span className="font-semibold">{text}</span>,
+  },
+  {
+    title: "Contact",
+    dataIndex: "email",
+    key: "email",
+    render: (email, record) => (
+      <div>
+        <div className="text-xs font-semibold">{email}</div>
+        <div className="text-[11px] text-secondary-sub">{record.phone}</div>
+      </div>
+    ),
+  },
+  {
+    title: "Location",
+    dataIndex: "location",
+    key: "location",
+    render: (text) => <span>{text}</span>,
+  },
+  {
+    title: "Status",
+    dataIndex: "status",
+    key: "status",
+    render: (status) => renderCustomerStatusTag(status),
+  },
+  {
+    title: "Assigned To",
+    dataIndex: "assignedEmployee",
+    key: "assignedEmployee",
+    sorter: (a, b) => a.assignedEmployee.localeCompare(b.assignedEmployee),
+    render: (text) => <span>{text}</span>,
+  },
+  {
+    title: "Actions",
+    key: "actions",
+    render: (_, record) => (
+      <Space size="small">
+        <Link href={`/customers/${record.id}`}>
+          <Button type="text" size="small" icon={<EyeOutlined />} />
         </Link>
-      ),
-    },
-    {
-      title: "Company",
-      dataIndex: "company",
-      key: "company",
-      sorter: (a, b) => a.company.localeCompare(b.company),
-    },
-    {
-      title: "Contact",
-      dataIndex: "email",
-      key: "email",
-      render: (email, record) => (
-        <div>
-          <div className="text-xs text-slate-800 dark:text-slate-200">{email}</div>
-          <div className="text-[11px] text-slate-400">{record.phone}</div>
-        </div>
-      ),
-    },
-    {
-      title: "Location",
-      dataIndex: "location",
-      key: "location",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status) => renderCustomerStatusTag(status),
-    },
-    {
-      title: "Assigned To",
-      dataIndex: "assignedEmployee",
-      key: "assignedEmployee",
-      sorter: (a, b) => a.assignedEmployee.localeCompare(b.assignedEmployee),
-    },
-    {
-      title: "Created Date",
-      dataIndex: "createdDate",
-      key: "createdDate",
-      sorter: (a, b) => new Date(a.createdDate) - new Date(b.createdDate),
-      render: (date) => new Date(date).toLocaleDateString(),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_, record) => (
-        <Space size="small">
-          <Link href={`/customers/${record.id}`}>
-            <Button type="text" size="small" icon={<EyeOutlined />} />
-          </Link>
-          <Button
-            type="text"
-            size="small"
-            icon={<EditOutlined className="text-indigo-600" />}
-            onClick={() => handleOpenEditModal(record)}
-          />
-          <Popconfirm
-            title="Delete customer"
-            description="Are you sure you want to delete this customer?"
-            onConfirm={() => {
-              dispatch(deleteCustomer(record.id));
-              message.success("Customer removed");
-            }}
-            okText="Yes"
-            cancelText="No"
-            okButtonProps={{ danger: true }}
-          >
-            <Button
-              type="text"
-              size="small"
-              danger
-              icon={<DeleteOutlined />}
-            />
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
-
+        <Button
+          type="text"
+          size="small"
+          icon={<EditOutlined style={{ color: "#4f46e5" }} />}
+          onClick={() => handleOpenEditModal(record)}
+        />
+        <Popconfirm
+          title="Delete customer"
+          description="Are you sure you want to delete this customer?"
+          onConfirm={() => {
+            dispatch(deleteCustomer(record.id));
+            message.success("Customer removed");
+          }}
+          okText="Yes"
+          cancelText="No"
+          okButtonProps={{ danger: true }}
+        >
+          <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+        </Popconfirm>
+      </Space>
+    ),
+  },
+];
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
