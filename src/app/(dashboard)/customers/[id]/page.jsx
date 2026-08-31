@@ -10,12 +10,9 @@ import {
   Button,
   Tabs,
   Timeline,
-  Form,
-  Input,
   List,
   Space,
   App,
-  Tag,
   Divider,
 } from "antd";
 import {
@@ -27,18 +24,18 @@ import {
   CheckSquareOutlined,
   EditOutlined,
 } from "@ant-design/icons";
+import { Formik, Form as FormikForm } from "formik";
 import { addCustomerNote, addCustomerActivity } from "../../../../store/slices/customerSlice";
 import { renderCustomerStatusTag, renderTaskStatusTag, renderTaskPriorityTag } from "../../../../utils/statusTags";
 import CustomerModal from "../../../../components/modules/customers/CustomerModal";
-
-const { TextArea } = Input;
+import { noteSchema } from "../../../../utils/validationSchemas";
+import { TextAreaField } from "../../../../components/common/FormikFields";
 
 export default function CustomerDetailPage() {
   const params = useParams();
   const router = useRouter();
   const dispatch = useDispatch();
   const { message } = App.useApp();
-  const [noteForm] = Form.useForm();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -62,7 +59,7 @@ export default function CustomerDetailPage() {
     );
   }
 
-  const handleAddNote = (values) => {
+  const handleAddNote = (values, { resetForm }) => {
     dispatch(
       addCustomerNote({
         customerId: customer.id,
@@ -77,7 +74,7 @@ export default function CustomerDetailPage() {
         description: `New note added by ${currentUser?.name || "Support Rep"}`,
       })
     );
-    noteForm.resetFields();
+    resetForm();
     message.success("Note added successfully");
   };
 
@@ -106,17 +103,30 @@ export default function CustomerDetailPage() {
       children: (
         <div className="space-y-6">
           <Card size="small" title="Add New Note" className="bg-slate-50 dark:bg-slate-900">
-            <Form form={noteForm} layout="vertical" onFinish={handleAddNote}>
-              <Form.Item
-                name="content"
-                rules={[{ required: true, message: "Please enter note content" }]}
-              >
-                <TextArea rows={3} placeholder="Write a note about this customer..." />
-              </Form.Item>
-              <Button type="primary" htmlType="submit" icon={<PlusOutlined />} className="bg-indigo-600">
-                Post Note
-              </Button>
-            </Form>
+            <Formik
+              initialValues={{ content: "" }}
+              validationSchema={noteSchema}
+              onSubmit={handleAddNote}
+            >
+              {({ isSubmitting }) => (
+                <FormikForm noValidate>
+                  <TextAreaField
+                    name="content"
+                    placeholder="Write a note about this customer..."
+                    required
+                  />
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    icon={<PlusOutlined />}
+                    loading={isSubmitting}
+                    className="bg-indigo-600"
+                  >
+                    Post Note
+                  </Button>
+                </FormikForm>
+              )}
+            </Formik>
           </Card>
 
           <List

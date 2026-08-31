@@ -73,10 +73,8 @@ export const mockSecureApiCall = async (endpoint, rawPayload) => {
       resolve({
         status: 200,
         endpoint,
-        data: decryptedPayload(encryptedPayload),
+        data: decryptData(encryptedPayload),
       });
     }, 150);
   });
 };
-
-const decryptedPayload = (enc) => decryptData(enc);
