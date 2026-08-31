@@ -1,8 +1,8 @@
 // src/app/(dashboard)/customers/[id]/page.jsx
 "use client";
 
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter, notFound } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Card,
@@ -49,15 +49,13 @@ export default function CustomerDetailPage() {
     state.tasks.items.filter((t) => t.customerId === customerId)
   );
 
+  // Wait one paint so the persisted store can hydrate before we 404.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+
   if (!customer) {
-    return (
-      <div className="p-8 text-center space-y-4">
-        <p className="text-slate-500">Customer account not found.</p>
-        <Button icon={<ArrowLeftOutlined />} onClick={() => router.push("/customers")}>
-          Return to Customer List
-        </Button>
-      </div>
-    );
+    if (hydrated) notFound();
+    return null;
   }
 
   const handleAddNote = (values, { resetForm }) => {

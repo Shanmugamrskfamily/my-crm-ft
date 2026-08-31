@@ -200,6 +200,37 @@ Result: **6 suites / 27 assertions, all green.**
 
 ---
 
+## Deployment (Vercel)
+
+The app is optimized for one-click Vercel deployment.
+
+1. **Push to GitHub / GitLab / Bitbucket**, then in Vercel choose **Import Project** and select the repo.
+2. **Environment variables** — set these in Vercel → Project Settings → Environment Variables (mark them Encrypted):
+
+   | Variable | Required | Purpose |
+   | --- | --- | --- |
+   | `NEXT_PUBLIC_AES_SECRET_KEY` | ✅ | AES-256 key for encrypted localStorage + mock API. Generate with `openssl rand -hex 32`. |
+   | `NEXT_PUBLIC_APP_URL` | Optional | Canonical URL for OpenGraph / metadata. If unset, the app auto-uses `VERCEL_URL`. |
+
+   A ready-to-copy template lives in [.env.example](.env.example).
+
+3. **Framework preset** — Vercel detects Next.js automatically. [vercel.json](vercel.json) pins the framework, sets `bom1` (Mumbai) as the primary region for low-latency delivery in India, and adds friendly redirects (`/home → /dashboard`, `/signin → /login`).
+4. **Security headers** in [next.config.mjs](next.config.mjs) (CSP, HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors none`) are applied by Next.js and honored by Vercel's edge, so no extra Vercel config is needed.
+5. **Error surfaces** — the app ships four App Router error boundaries so no runtime crash ever leaks a raw stack trace to your users:
+
+   | File | Renders when |
+   | --- | --- |
+   | [src/app/not-found.jsx](src/app/not-found.jsx) | An unknown route is requested (HTTP 404). |
+   | [src/app/error.jsx](src/app/error.jsx) | A React tree throws at page level (HTTP 500-class). |
+   | [src/app/global-error.jsx](src/app/global-error.jsx) | The root layout itself throws. Rendered with its own `<html>/<body>`. |
+   | [src/app/loading.jsx](src/app/loading.jsx) | Segment is streaming / suspending. |
+   | [src/app/(dashboard)/error.jsx](src/app/(dashboard)/error.jsx) | Isolated dashboard error — keeps the sidebar shell alive. |
+   | [src/app/(dashboard)/not-found.jsx](src/app/(dashboard)/not-found.jsx) | `notFound()` from a segment (e.g. `/customers/missing`). |
+
+6. **Deploy.** Vercel runs `npm run build`, generates the static routes, and serves the dynamic `/customers/[id]` on demand. First deploy usually completes in ~2 min.
+
+---
+
 ## Scripts
 
 | Command | Purpose |
