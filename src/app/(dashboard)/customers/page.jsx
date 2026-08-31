@@ -22,13 +22,15 @@ import {
   clearCustomerSelection,
 } from "../../../store/slices/customerSlice";
 import { renderCustomerStatusTag } from "../../../utils/statusTags";
+import { usePermissions } from "../../../hooks/usePermissions";
+import Can from "../../../components/common/Can";
 
 const { Title, Text } = Typography;
 
 export default function CustomersPage() {
   const dispatch = useDispatch();
   const { message } = App.useApp();
-  const user = useSelector((state) => state.auth.user);
+  const { can } = usePermissions();
 
   const customers = useSelector((state) => state.customers.items || []);
   const selectedRowKeys = useSelector(
@@ -174,25 +176,29 @@ const columns = [
         <Link href={`/customers/${record.id}`}>
           <Button type="text" size="small" icon={<EyeOutlined />} />
         </Link>
-        <Button
-          type="text"
-          size="small"
-          icon={<EditOutlined style={{ color: "#4f46e5" }} />}
-          onClick={() => handleOpenEditModal(record)}
-        />
-        <Popconfirm
-          title="Delete customer"
-          description="Are you sure you want to delete this customer?"
-          onConfirm={() => {
-            dispatch(deleteCustomer(record.id));
-            message.success("Customer removed");
-          }}
-          okText="Yes"
-          cancelText="No"
-          okButtonProps={{ danger: true }}
-        >
-          <Button disabled={user?.role !== "Admin"} type="text" size="small" danger icon={<DeleteOutlined />} />
-        </Popconfirm>
+        <Can action="customer.edit">
+          <Button
+            type="text"
+            size="small"
+            icon={<EditOutlined style={{ color: "#4f46e5" }} />}
+            onClick={() => handleOpenEditModal(record)}
+          />
+        </Can>
+        <Can action="customer.delete">
+          <Popconfirm
+            title="Delete customer"
+            description="Are you sure you want to delete this customer?"
+            onConfirm={() => {
+              dispatch(deleteCustomer(record.id));
+              message.success("Customer removed");
+            }}
+            okText="Yes"
+            cancelText="No"
+            okButtonProps={{ danger: true }}
+          >
+            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </Can>
       </Space>
     ),
   },
@@ -210,17 +216,21 @@ const columns = [
         </div>
 
         <Space wrap>
-          <Button icon={<DownloadOutlined />} onClick={handleExportCSV}>
-            Export CSV
-          </Button>
-          <Button
-            type="primary"
-            icon={<UserAddOutlined />}
-            onClick={handleOpenAddModal}
-            className="bg-indigo-600"
-          >
-            Add Customer
-          </Button>
+          <Can action="customer.export">
+            <Button icon={<DownloadOutlined />} onClick={handleExportCSV}>
+              Export CSV
+            </Button>
+          </Can>
+          <Can action="customer.create">
+            <Button
+              type="primary"
+              icon={<UserAddOutlined />}
+              onClick={handleOpenAddModal}
+              className="bg-indigo-600"
+            >
+              Add Customer
+            </Button>
+          </Can>
         </Space>
       </div>
 
@@ -245,7 +255,7 @@ const columns = [
               ]}
             />
 
-            {selectedRowKeys.length > 0 && (
+            {selectedRowKeys.length > 0 && can("customer.bulkDelete") && (
               <Popconfirm
                 title={`Delete ${selectedRowKeys.length} customer(s)?`}
                 description="This action cannot be undone."
@@ -253,7 +263,7 @@ const columns = [
                 okText="Delete Selected"
                 okButtonProps={{ danger: true }}
               >
-                <Button disabled={user?.role !== "Admin"} danger type="primary" icon={<DeleteOutlined />}>
+                <Button danger type="primary" icon={<DeleteOutlined />}>
                   Bulk Delete ({selectedRowKeys.length})
                 </Button>
               </Popconfirm>

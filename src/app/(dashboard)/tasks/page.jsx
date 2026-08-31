@@ -38,6 +38,8 @@ import {
   renderTaskStatusTag,
   renderTaskPriorityTag,
 } from "../../../utils/statusTags";
+import Can from "../../../components/common/Can";
+import { usePermissions } from "../../../hooks/usePermissions";
 
 const { Title, Text } = Typography;
 
@@ -50,7 +52,7 @@ export default function TasksPage() {
   const tasks = useSelector((state) => state.tasks.items || []);
   const customers = useSelector((state) => state.customers.items || []);
   const leads = useSelector((state) => state.leads.items || []);
-  const user = useSelector((state) => state.auth.user);
+  const { can } = usePermissions();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -191,25 +193,29 @@ export default function TasksPage() {
       key: "actions",
       render: (_, record) => (
         <Space size="small">
-          <Button
-            type="text"
-            size="small"
-            icon={<EditOutlined className="text-indigo-600" />}
-            onClick={() => handleOpenEditModal(record)}
-          />
-          <Popconfirm
-            title="Delete Task"
-            description="Are you sure you want to remove this task?"
-            onConfirm={() => {
-              dispatch(deleteTask(record.id));
-              message.success("Task deleted");
-            }}
-            okText="Yes"
-            cancelText="No"
-            okButtonProps={{ danger: true }}
-          >
-            <Button disabled={user?.role !== "Admin"} type="text" size="small" danger icon={<DeleteOutlined />} />
-          </Popconfirm>
+          <Can action="task.edit">
+            <Button
+              type="text"
+              size="small"
+              icon={<EditOutlined className="text-indigo-600" />}
+              onClick={() => handleOpenEditModal(record)}
+            />
+          </Can>
+          <Can action="task.delete">
+            <Popconfirm
+              title="Delete Task"
+              description="Are you sure you want to remove this task?"
+              onConfirm={() => {
+                dispatch(deleteTask(record.id));
+                message.success("Task deleted");
+              }}
+              okText="Yes"
+              cancelText="No"
+              okButtonProps={{ danger: true }}
+            >
+              <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+            </Popconfirm>
+          </Can>
         </Space>
       ),
     },
@@ -236,14 +242,16 @@ export default function TasksPage() {
               { label: "Board", value: "board", icon: <AppstoreOutlined /> },
             ]}
           />
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleOpenAddModal}
-            className="bg-indigo-600"
-          >
-            Create Task
-          </Button>
+          <Can action="task.create">
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleOpenAddModal}
+              className="bg-indigo-600"
+            >
+              Create Task
+            </Button>
+          </Can>
         </Space>
       </div>
 

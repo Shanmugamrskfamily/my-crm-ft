@@ -30,6 +30,7 @@ import { renderCustomerStatusTag, renderTaskStatusTag, renderTaskPriorityTag } f
 import CustomerModal from "../../../../components/modules/customers/CustomerModal";
 import { noteSchema } from "../../../../utils/validationSchemas";
 import { TextAreaField } from "../../../../components/common/FormikFields";
+import Can from "../../../../components/common/Can";
 
 export default function CustomerDetailPage() {
   const params = useParams();
@@ -203,14 +204,16 @@ export default function CustomerDetailPage() {
         >
           Back to Customers
         </Button>
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          onClick={() => setIsEditModalOpen(true)}
-          className="bg-indigo-600"
-        >
-          Edit Customer
-        </Button>
+        <Can action="customer.edit">
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => setIsEditModalOpen(true)}
+            className="bg-indigo-600"
+          >
+            Edit Customer
+          </Button>
+        </Can>
       </div>
 
       <Card variant="borderless" className="shadow-xs rounded-xl">

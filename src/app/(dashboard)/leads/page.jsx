@@ -28,6 +28,8 @@ import {
 import { addCustomer } from "../../../store/slices/customerSlice";
 import { renderLeadStatusTag } from "../../../utils/statusTags";
 import { availableEmployees } from "../../../mock/initialData";
+import Can from "../../../components/common/Can";
+import { usePermissions } from "../../../hooks/usePermissions";
 
 const { Title, Text } = Typography;
 
@@ -45,7 +47,7 @@ export default function LeadsPage() {
   const { message, modal } = App.useApp();
 
   const leads = useSelector((state) => state.leads.items || []);
-  const user = useSelector((state) => state.auth.user);
+  const { can } = usePermissions();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
@@ -184,7 +186,7 @@ export default function LeadsPage() {
       key: "actions",
       render: (_, record) => (
         <Space size="small">
-          {record.status !== "Converted" && (
+          {record.status !== "Converted" && can("lead.convert") && (
             <Tooltip title="Convert to Customer">
               <Button
                 type="text"
@@ -194,25 +196,29 @@ export default function LeadsPage() {
               />
             </Tooltip>
           )}
-          <Button
-            type="text"
-            size="small"
-            icon={<EditOutlined className="text-indigo-600" />}
-            onClick={() => handleOpenEditModal(record)}
-          />
-          <Popconfirm
-            title="Delete Lead"
-            description="Are you sure you want to remove this lead?"
-            onConfirm={() => {
-              dispatch(deleteLead(record.id));
-              message.success("Lead removed");
-            }}
-            okText="Yes"
-            cancelText="No"
-            okButtonProps={{ danger: true }}
-          >
-            <Button disabled={user?.role !== "Admin"} type="text" size="small" danger icon={<DeleteOutlined />} />
-          </Popconfirm>
+          <Can action="lead.edit">
+            <Button
+              type="text"
+              size="small"
+              icon={<EditOutlined className="text-indigo-600" />}
+              onClick={() => handleOpenEditModal(record)}
+            />
+          </Can>
+          <Can action="lead.delete">
+            <Popconfirm
+              title="Delete Lead"
+              description="Are you sure you want to remove this lead?"
+              onConfirm={() => {
+                dispatch(deleteLead(record.id));
+                message.success("Lead removed");
+              }}
+              okText="Yes"
+              cancelText="No"
+              okButtonProps={{ danger: true }}
+            >
+              <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+            </Popconfirm>
+          </Can>
         </Space>
       ),
     },
@@ -230,14 +236,16 @@ export default function LeadsPage() {
           </Text>
         </div>
 
-        <Button
-          type="primary"
-          icon={<UserAddOutlined />}
-          onClick={handleOpenAddModal}
-          className="bg-indigo-600"
-        >
-          Add New Lead
-        </Button>
+        <Can action="lead.create">
+          <Button
+            type="primary"
+            icon={<UserAddOutlined />}
+            onClick={handleOpenAddModal}
+            className="bg-indigo-600"
+          >
+            Add New Lead
+          </Button>
+        </Can>
       </div>
 
       <AntdDataTable
