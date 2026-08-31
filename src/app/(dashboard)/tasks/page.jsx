@@ -14,6 +14,7 @@ import {
   Row,
   Col,
   Statistic,
+  Segmented,
 } from "antd";
 import {
   PlusOutlined,
@@ -22,7 +23,10 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   ScheduleOutlined,
+  UnorderedListOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
+import TaskKanbanBoard from "../../../components/modules/tasks/TaskKanbanBoard";
 import Link from "next/link";
 import AntdDataTable from "../../../components/common/AntdDataTable";
 import TaskModal from "../../../components/modules/tasks/TaskModal";
@@ -53,6 +57,7 @@ export default function TasksPage() {
   const [priorityFilter, setPriorityFilter] = useState("ALL");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
+  const [viewMode, setViewMode] = useState("list"); // 'list' | 'board'
 
   // Quick Metrics
   const todoCount = tasks.filter((t) => t.status === "Todo").length;
@@ -222,14 +227,24 @@ export default function TasksPage() {
           </Text>
         </div>
 
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={handleOpenAddModal}
-          className="bg-indigo-600"
-        >
-          Create Task
-        </Button>
+        <Space wrap>
+          <Segmented
+            value={viewMode}
+            onChange={setViewMode}
+            options={[
+              { label: "List", value: "list", icon: <UnorderedListOutlined /> },
+              { label: "Board", value: "board", icon: <AppstoreOutlined /> },
+            ]}
+          />
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={handleOpenAddModal}
+            className="bg-indigo-600"
+          >
+            Create Task
+          </Button>
+        </Space>
       </div>
 
       {/* Metric Highlights */}
@@ -263,36 +278,40 @@ export default function TasksPage() {
         </Col>
       </Row>
 
-      <AntdDataTable
-        columns={columns}
-        dataSource={filteredTasks}
-        searchPlaceholder="Search tasks by title, description, assignee..."
-        onSearch={(value) => setSearchTerm(value)}
-        extraActions={
-          <Space wrap>
-            <Select
-              defaultValue="ALL"
-              style={{ width: 130 }}
-              onChange={(value) => setStatusFilter(value)}
-              options={[
-                { label: "All Statuses", value: "ALL" },
-                ...TASK_STATUS_OPTIONS.map((st) => ({ label: st, value: st })),
-              ]}
-            />
-            <Select
-              defaultValue="ALL"
-              style={{ width: 130 }}
-              onChange={(value) => setPriorityFilter(value)}
-              options={[
-                { label: "All Priorities", value: "ALL" },
-                { label: "High", value: "High" },
-                { label: "Medium", value: "Medium" },
-                { label: "Low", value: "Low" },
-              ]}
-            />
-          </Space>
-        }
-      />
+      {viewMode === "list" ? (
+        <AntdDataTable
+          columns={columns}
+          dataSource={filteredTasks}
+          searchPlaceholder="Search tasks by title, description, assignee..."
+          onSearch={(value) => setSearchTerm(value)}
+          extraActions={
+            <Space wrap>
+              <Select
+                defaultValue="ALL"
+                style={{ width: 130 }}
+                onChange={(value) => setStatusFilter(value)}
+                options={[
+                  { label: "All Statuses", value: "ALL" },
+                  ...TASK_STATUS_OPTIONS.map((st) => ({ label: st, value: st })),
+                ]}
+              />
+              <Select
+                defaultValue="ALL"
+                style={{ width: 130 }}
+                onChange={(value) => setPriorityFilter(value)}
+                options={[
+                  { label: "All Priorities", value: "ALL" },
+                  { label: "High", value: "High" },
+                  { label: "Medium", value: "Medium" },
+                  { label: "Low", value: "Low" },
+                ]}
+              />
+            </Space>
+          }
+        />
+      ) : (
+        <TaskKanbanBoard tasks={filteredTasks} />
+      )}
 
       <TaskModal
         isOpen={isModalOpen}
