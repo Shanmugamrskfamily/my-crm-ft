@@ -1,6 +1,10 @@
 /* src/app/globals.css */
 @import "tailwindcss";
 
+/* Tailwind v4: drive the `dark:` variant from the `.dark` class we toggle
+   on <html> from the theme provider, instead of the OS-level media query. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 * {
   box-sizing: border-box;
 }

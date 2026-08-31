@@ -4,7 +4,13 @@
 import { useState } from "react";
 import { Formik, Form as FormikForm } from "formik";
 import { Button, Card, Typography, Divider, App, Alert } from "antd";
-import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LockOutlined,
+  SafetyCertificateOutlined,
+  CrownOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { loginSuccess } from "../../../store/slices/authSlice";
@@ -100,31 +106,73 @@ export default function LoginForm() {
                 Sign In
               </Button>
 
-              <Divider className="my-4">
-                <span className="text-xs text-slate-400 uppercase tracking-wider">Quick Demo Logins</span>
+              <Divider className="my-5">
+                <span className="text-[10px] text-slate-400 uppercase tracking-[0.14em] font-semibold">
+                  Quick Demo Logins
+                </span>
               </Divider>
 
-              <div className="space-y-2">
-                {MOCK_USERS.map((demo) => (
-                  <button
-                    key={demo.email}
-                    type="button"
-                    onClick={() => {
-                      setValues({ email: demo.email, password: demo.password });
-                      setErrorMessage(null);
-                    }}
-                    className="w-full text-left p-2.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-500 bg-slate-50/60 dark:bg-slate-900/60 transition flex items-center justify-between group"
-                  >
-                    <div>
-                      <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 group-hover:text-indigo-600">
-                        {demo.user.name} ({demo.user.role})
-                      </p>
-                      <p className="text-[11px] text-slate-400">{demo.email} &bull; Password@123</p>
-                    </div>
-                    <SafetyCertificateOutlined className="text-slate-400 group-hover:text-indigo-600" />
-                  </button>
-                ))}
+              <div className="grid grid-cols-1 gap-2.5">
+                {MOCK_USERS.map((demo) => {
+                  const isAdmin = demo.user.role === "Admin";
+                  const initial = demo.user.name.charAt(0).toUpperCase();
+                  const RoleIcon = isAdmin ? CrownOutlined : TeamOutlined;
+                  return (
+                    <button
+                      key={demo.email}
+                      type="button"
+                      onClick={() => {
+                        setValues({ email: demo.email, password: demo.password });
+                        setErrorMessage(null);
+                      }}
+                      className="group w-full text-left rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/40 hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-md dark:hover:bg-slate-800/70 transition-all duration-200 px-3 py-2.5 flex items-center gap-3"
+                    >
+                      <div
+                        className={`flex items-center justify-center w-9 h-9 rounded-full text-white font-bold text-sm flex-shrink-0 shadow-sm ${
+                          isAdmin
+                            ? "bg-gradient-to-br from-indigo-500 to-indigo-700"
+                            : "bg-gradient-to-br from-emerald-500 to-emerald-700"
+                        }`}
+                      >
+                        {initial}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[13px] font-semibold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 truncate">
+                            {demo.user.name}
+                          </span>
+                          <span
+                            className={`inline-flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wide ${
+                              isAdmin
+                                ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-300"
+                                : "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300"
+                            }`}
+                          >
+                            <RoleIcon style={{ fontSize: 9 }} />
+                            {isAdmin ? "Admin" : "Sales"}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono truncate mt-0.5">
+                          {demo.email}
+                        </div>
+                      </div>
+
+                      <SafetyCertificateOutlined
+                        className="text-slate-300 dark:text-slate-600 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors flex-shrink-0"
+                        style={{ fontSize: 16 }}
+                      />
+                    </button>
+                  );
+                })}
               </div>
+
+              <p className="mt-3 text-center text-[10px] text-slate-400 dark:text-slate-500">
+                Click a card to auto-fill credentials &middot; password{" "}
+                <span className="font-mono font-semibold text-slate-500 dark:text-slate-300">
+                  Password@123
+                </span>
+              </p>
             </FormikForm>
           )}
         </Formik>
