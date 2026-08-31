@@ -4,6 +4,7 @@
 import { useEffect } from "react";
 import { ConfigProvider, theme as antdTheme, App } from "antd";
 import { useSelector } from "react-redux";
+import ToastHost from "../common/ToastHost";
 
 export default function AntdThemeProvider({ children }) {
   const currentTheme = useSelector((state) => state.ui?.theme);
@@ -45,7 +46,10 @@ export default function AntdThemeProvider({ children }) {
         },
       }}
     >
-      <App>{children}</App>
+      <App>
+        <ToastHost />
+        {children}
+      </App>
     </ConfigProvider>
   );
 }

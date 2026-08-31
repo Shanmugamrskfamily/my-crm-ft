@@ -5,6 +5,7 @@ import customerReducer from "./slices/customerSlice";
 import leadReducer from "./slices/leadSlice";
 import taskReducer from "./slices/taskSlice";
 import uiReducer from "./slices/uiSlice";
+import notificationReducer from "./slices/notificationSlice";
 import { loadState, saveState } from "./storage";
 
 const preloadedState = loadState();
@@ -16,6 +17,7 @@ export const store = configureStore({
     leads: leadReducer,
     tasks: taskReducer,
     ui: uiReducer,
+    notifications: notificationReducer,
   },
   preloadedState,
 });
