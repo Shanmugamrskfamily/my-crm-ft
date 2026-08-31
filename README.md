@@ -257,6 +257,14 @@ The app is optimized for one-click Vercel deployment.
 
 ---
 
+## Author
+
+**Shanmugam R** — Frontend Developer
+📧 [shanmugamrskfamily@gmail.com](mailto:shanmugamrskfamily@gmail.com)
+🐙 [github.com/Shanmugamrskfamily](https://github.com/Shanmugamrskfamily)
+
+---
+
 ## License
 
 Private assessment submission for Webdads2u.
