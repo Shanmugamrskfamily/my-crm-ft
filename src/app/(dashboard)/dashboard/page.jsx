@@ -11,6 +11,7 @@ import {
 import MetricCards from "../../../components/modules/dashboard/MetricCards";
 import RecentCustomersTable from "../../../components/modules/dashboard/RecentCustomersTable";
 import RecentActivityFeed from "../../../components/modules/dashboard/RecentActivityFeed";
+import DashboardCharts from "../../../components/modules/dashboard/DashboardCharts";
 
 const { Title, Text } = Typography;
 
@@ -33,6 +34,9 @@ export default function DashboardPage() {
 
       {/* KPI Cards */}
       <MetricCards metrics={metrics} />
+
+      {/* Analytics charts */}
+      <DashboardCharts />
 
       {/* Split Grid: Recent Customers & Activity Log */}
       <Row gutter={[16, 16]}>
