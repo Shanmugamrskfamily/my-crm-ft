@@ -13,7 +13,6 @@ import {
   Card,
   Row,
   Col,
-  Statistic,
   Segmented,
 } from "antd";
 import {
@@ -257,33 +256,67 @@ export default function TasksPage() {
 
       {/* Metric Highlights */}
       <Row gutter={[16, 16]}>
-        <Col xs={24} sm={8}>
-          <Card variant="borderless" className="shadow-xs rounded-xl">
-            <Statistic
-              title="To Do"
-              value={todoCount}
-              prefix={<ScheduleOutlined className="text-slate-500 mr-1" />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={8}>
-          <Card variant="borderless" className="shadow-xs rounded-xl">
-            <Statistic
-              title="In Progress"
-              value={inProgressCount}
-              prefix={<ClockCircleOutlined className="text-amber-500 mr-1" />}
-            />
-          </Card>
-        </Col>
-        <Col xs={24} sm={8}>
-          <Card variant="borderless" className="shadow-xs rounded-xl">
-            <Statistic
-              title="Completed"
-              value={completedCount}
-              prefix={<CheckCircleOutlined className="text-emerald-500 mr-1" />}
-            />
-          </Card>
-        </Col>
+        {[
+          {
+            label: "To Do",
+            value: todoCount,
+            icon: <ScheduleOutlined style={{ fontSize: 22 }} />,
+            iconColor: "#4338ca",
+            iconBg: "bg-indigo-100 dark:bg-indigo-500/15",
+            iconBorder: "border-indigo-200 dark:border-indigo-500/30",
+            border: "#4f46e5",
+            hint: `${tasks.length ? Math.round((todoCount / tasks.length) * 100) : 0}% of pipeline`,
+          },
+          {
+            label: "In Progress",
+            value: inProgressCount,
+            icon: <ClockCircleOutlined style={{ fontSize: 22 }} />,
+            iconColor: "#b45309",
+            iconBg: "bg-amber-100 dark:bg-amber-500/15",
+            iconBorder: "border-amber-200 dark:border-amber-500/30",
+            border: "#d97706",
+            hint: "Actively worked on",
+          },
+          {
+            label: "Completed",
+            value: completedCount,
+            icon: <CheckCircleOutlined style={{ fontSize: 22 }} />,
+            iconColor: "#047857",
+            iconBg: "bg-emerald-100 dark:bg-emerald-500/15",
+            iconBorder: "border-emerald-200 dark:border-emerald-500/30",
+            border: "#059669",
+            hint: `${tasks.length ? Math.round((completedCount / tasks.length) * 100) : 0}% completion rate`,
+          },
+        ].map((c) => (
+          <Col xs={24} sm={8} key={c.label}>
+            <Card
+              variant="borderless"
+              className="shadow-xs rounded-xl"
+              style={{ borderTop: `4px solid ${c.border}` }}
+              styles={{ body: { padding: "18px 22px" } }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    {c.label}
+                  </div>
+                  <div className="text-3xl font-extrabold text-slate-900 dark:text-slate-100 leading-tight mt-1">
+                    {c.value}
+                  </div>
+                  <div className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-1">
+                    {c.hint}
+                  </div>
+                </div>
+                <div
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center border ${c.iconBg} ${c.iconBorder}`}
+                  style={{ color: c.iconColor }}
+                >
+                  {c.icon}
+                </div>
+              </div>
+            </Card>
+          </Col>
+        ))}
       </Row>
 
       {viewMode === "list" ? (
