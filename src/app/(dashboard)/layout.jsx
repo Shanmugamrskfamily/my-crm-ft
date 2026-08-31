@@ -10,7 +10,6 @@ import {
   Button,
   Avatar,
   Dropdown,
-  Space,
   Typography,
   Switch,
   theme as antdTheme,
@@ -146,30 +145,52 @@ export default function DashboardLayout({ children }) {
               style={{ fontSize: "16px", width: 44, height: 44 }}
             />
 
-            <Space size="middle" style={{marginTop: "10px"}}>
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
               <Switch
                 checkedChildren={<BulbFilled />}
                 unCheckedChildren={<BulbOutlined />}
                 checked={currentTheme === "dark"}
                 onChange={() => dispatch(toggleTheme())}
               />
-              <Dropdown menu={{ items: userDropdownItems }} placement="bottomRight">
-                <Space className="cursor-pointer">
+              <Dropdown
+                menu={{ items: userDropdownItems }}
+                placement="bottomRight"
+                trigger={["click"]}
+              >
+                <div
+                  className="cursor-pointer"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    padding: "4px 10px 4px 4px",
+                    borderRadius: 999,
+                    transition: "background 0.15s",
+                  }}
+                >
                   <Avatar
-                    style={{ backgroundColor: "#4f46e5" }}
+                    style={{ backgroundColor: "#4f46e5", flexShrink: 0 }}
                     icon={<UserOutlined />}
+                    size={36}
                   />
-                  <div className="hidden md:block text-left">
-                    <div className="text-xs font-semibold leading-tight">
+                  <div
+                    className="hidden md:flex"
+                    style={{
+                      flexDirection: "column",
+                      lineHeight: 1.15,
+                      textAlign: "left",
+                    }}
+                  >
+                    <span style={{ fontSize: 13, fontWeight: 600 }}>
                       {user?.name || "CRM User"}
-                    </div>
-                    <div className="text-[10px] text-slate-400">
+                    </span>
+                    <span style={{ fontSize: 11, color: "#94a3b8" }}>
                       {user?.role || "Sales Representative"}
-                    </div>
+                    </span>
                   </div>
-                </Space>
+                </div>
               </Dropdown>
-            </Space>
+            </div>
           </Header>
 
           <Content

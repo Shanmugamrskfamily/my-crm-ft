@@ -27,7 +27,7 @@ export default function AntdThemeProvider({ children }) {
           colorError: "#ef4444",
           colorInfo: "#3b82f6",
           borderRadius: 8,
-          fontFamily: "var(--font-nunito), Nunito, sans-serif",
+          fontFamily: 'var(--font-nunito), "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
           fontSize: 13,
           colorBgContainer: isDark ? "#111827" : "#ffffff",
           colorBgElevated: isDark ? "#1e293b" : "#ffffff",

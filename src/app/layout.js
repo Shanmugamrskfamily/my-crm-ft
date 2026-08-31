@@ -1,8 +1,16 @@
 // src/app/layout.jsx
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { Nunito } from "next/font/google";
 import ReduxProvider from "../components/providers/ReduxProvider";
 import AntdThemeProvider from "../components/providers/AntdThemeProvider";
 import "../app/globals.css";
+
+const nunito = Nunito({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-nunito",
+  display: "swap",
+});
 
 const APP_NAME = "Apex CRM";
 const APP_DEFAULT_TITLE = "Apex CRM – Enterprise Customer & Lead Management Platform";
@@ -78,8 +86,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className="bg-slate-50 antialiased text-slate-800">
+    <html lang="en" className={nunito.variable}>
+      <body className={`${nunito.className} antialiased`}>
         <AntdRegistry>
           <ReduxProvider>
             <AntdThemeProvider>{children}</AntdThemeProvider>
