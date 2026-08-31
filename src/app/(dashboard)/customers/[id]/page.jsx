@@ -103,7 +103,7 @@ export default function CustomerDetailPage() {
       ),
       children: (
         <div className="space-y-6">
-          <Card size="small" title="Add New Note" className="bg-slate-50 dark:bg-slate-900">
+          <Card size="small" title="Add New Note" className="bg-slate-50/60 dark:bg-slate-900/40">
             <Formik
               initialValues={{ content: "" }}
               validationSchema={noteSchema}

@@ -25,6 +25,7 @@ export const saveState = (state) => {
       customers: state.customers,
       leads: state.leads,
       tasks: state.tasks,
+      ui: state.ui,
     };
     const encrypted = encryptData(stateToPersist);
     localStorage.setItem(STORAGE_KEY, encrypted);

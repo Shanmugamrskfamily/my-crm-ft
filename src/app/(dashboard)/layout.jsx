@@ -43,7 +43,7 @@ export default function DashboardLayout({ children }) {
   const user = useSelector((state) => state.auth.user);
   const currentTheme = useSelector((state) => state.ui.theme);
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer, colorBgLayout, borderRadiusLG, colorBorderSecondary },
   } = antdTheme.useToken();
 
   const menuItems = [
@@ -136,7 +136,7 @@ export default function DashboardLayout({ children }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              borderBottom: "1px solid #f0f0f0",
+              borderBottom: `1px solid ${colorBorderSecondary}`,
             }}
           >
             <Button
@@ -174,10 +174,10 @@ export default function DashboardLayout({ children }) {
 
           <Content
             style={{
-              margin: "24px 16px",
+              margin: 16,
               padding: 24,
               minHeight: 280,
-              background: colorBgContainer,
+              background: colorBgLayout,
               borderRadius: borderRadiusLG,
             }}
           >

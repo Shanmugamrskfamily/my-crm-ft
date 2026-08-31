@@ -5,112 +5,52 @@
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   font-family: var(--font-nunito), Nunito, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #f1f5f9;
-  color: #0f172a;
 }
 
-/* ==========================================================================
-   LIGHT MODE RULES (When <html> does NOT have .dark)
-   ========================================================================== */
+/* Light mode: color-scheme + soft background. AntD ConfigProvider handles
+   the vast majority of component colors, so we only paint the shell. */
 html:not(.dark) {
   color-scheme: light;
 }
-
 html:not(.dark) body {
   background-color: #f1f5f9;
   color: #0f172a;
 }
 
-/* Force light mode table text to dark black/slate */
-html:not(.dark) .ant-table-wrapper,
-html:not(.dark) .ant-table,
-html:not(.dark) .ant-table-thead > tr > th,
-html:not(.dark) .ant-table-tbody > tr > td,
-html:not(.dark) .ant-table-tbody > tr > td span,
-html:not(.dark) .ant-table-tbody > tr > td div,
-html:not(.dark) .ant-card,
-html:not(.dark) .ant-typography,
-html:not(.dark) .ant-input,
-html:not(.dark) .ant-select {
-  color: #0f172a !important;
-}
-
-html:not(.dark) .ant-table-thead > tr > th {
-  background: #f8fafc !important;
-  color: #334155 !important;
-}
-
-html:not(.dark) .ant-table-tbody > tr > td {
-  background: #ffffff !important;
-  border-bottom: 1px solid #f1f5f9 !important;
-}
-
-/* Subtle secondary info in light mode (e.g. phone numbers, subtitles) */
-html:not(.dark) .text-muted,
-html:not(.dark) .ant-table-tbody > tr > td .text-secondary-sub {
-  color: #64748b !important;
-}
-
-/* ==========================================================================
-   DARK MODE RULES (When <html> HAS .dark)
-   ========================================================================== */
 html.dark {
   color-scheme: dark;
 }
-
 html.dark body {
   background-color: #0b0f19;
-  color: #f8fafc;
+  color: #f1f5f9;
 }
 
-/* Force dark mode table text to crisp white/light-slate */
-html.dark .ant-table-wrapper,
-html.dark .ant-table,
-html.dark .ant-table-thead > tr > th,
-html.dark .ant-table-tbody > tr > td,
-html.dark .ant-table-tbody > tr > td span,
-html.dark .ant-table-tbody > tr > td div,
-html.dark .ant-card,
-html.dark .ant-typography,
-html.dark .ant-input,
-html.dark .ant-select {
-  color: #f8fafc !important;
+/* Utility classes for text tones consistent across themes */
+.text-secondary-sub {
+  color: #64748b;
+}
+html.dark .text-secondary-sub {
+  color: #94a3b8;
 }
 
-html.dark .ant-table-thead > tr > th {
-  background: #1e293b !important;
-  color: #e2e8f0 !important;
-}
-
-html.dark .ant-table-tbody > tr > td {
-  background: #111827 !important;
-  border-bottom: 1px solid #1f2937 !important;
-}
-
-html.dark .ant-table-tbody > tr > td .text-secondary-sub {
-  color: #94a3b8 !important;
-}
-
-/* ==========================================================================
-   TABLE LINK OVERRIDES (Ensure links stay indigo/blue)
-   ========================================================================== */
+/* Table row links keep the indigo/brand tone in both themes */
 html:not(.dark) .ant-table-tbody a {
-  color: #4f46e5 !important;
+  color: #4f46e5;
 }
-
 html.dark .ant-table-tbody a {
-  color: #818cf8 !important;
+  color: #818cf8;
 }
 
-/* Custom Scrollbar */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -121,4 +61,15 @@ html.dark .ant-table-tbody a {
 }
 html.dark ::-webkit-scrollbar-thumb {
   background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Ensure Formik-driven help/error text stays legible in dark mode */
+html.dark .ant-form-item-explain-error {
+  color: #f87171;
 }
